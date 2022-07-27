@@ -17,7 +17,12 @@
   "engines": {
     "node": ">=14"
   },
+  "devDependencies": {
+    "@sinonjs/referee": "^9.1.2",
+    "test": "^3.2.1"
+  },
   "scripts": {
-    "postversion": "npm publish --access public"
+    "postversion": "npm publish --access public",
+    "test": "node--test"
   }
 }

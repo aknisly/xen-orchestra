@@ -27,6 +27,7 @@
 
 <!--packages-start-->
 
+- @vates/task patch
 - xo-server minor
 
 <!--packages-end-->
