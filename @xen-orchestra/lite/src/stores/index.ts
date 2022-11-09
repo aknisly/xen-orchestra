@@ -13,6 +13,7 @@ export function createRecordContext<T extends XenApiRecord>(
 ) {
   let isInitialized = false;
   const isReady = ref(false);
+  const hasError = ref(false);
 
   async function init() {
     if (isInitialized) {
@@ -22,7 +23,14 @@ export function createRecordContext<T extends XenApiRecord>(
     isInitialized = true;
 
     const xapiRecordsStore = useRecordsStore();
-    await xapiRecordsStore.loadRecords(objectType);
+    try {
+      await xapiRecordsStore.loadRecords(objectType);
+    } catch (error) {
+      isReady.value = true;
+      hasError.value = true;
+      throw error;
+    }
+
     isReady.value = true;
   }
 
@@ -71,6 +79,7 @@ export function createRecordContext<T extends XenApiRecord>(
     getRecord,
     getRecordByUuid,
     isReady,
+    hasError,
     allRecords,
     hasRecordByUuid,
   };

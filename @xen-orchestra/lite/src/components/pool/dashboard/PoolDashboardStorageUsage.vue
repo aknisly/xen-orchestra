@@ -1,5 +1,5 @@
 <template>
-  <UiCard>
+  <UiCard :class="hasError ? 'ui-card-backgroud-error' : 'ui-card-backgroud'">
     <UiCardTitle
       :left="$t('storage-usage')"
       :right="$t('top-#', { n: N_ITEMS })"
@@ -25,6 +25,8 @@ import { useSrStore } from "@/stores/storage.store";
 import { N_ITEMS } from "@/views/pool/PoolDashboardView.vue";
 
 const srStore = useSrStore();
+
+const hasError = computed(() => srStore.hasError);
 
 const data = computed<{
   result: { id: string; label: string; value: number }[];

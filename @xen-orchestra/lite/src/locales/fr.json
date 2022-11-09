@@ -23,6 +23,7 @@
   "descending": "descendant",
   "display": "Affichage",
   "edit-config": "Modifier config",
+  "error-no-data": "Erreur, impossible de collecter les données.",
   "error-occured": "Une erreur est survenue",
   "export": "Exporter",
   "export-table-to": "Exporter le tableau en {type}",

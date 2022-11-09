@@ -3,11 +3,16 @@
     <template v-if="!isReady">
       <InfraLoadingItem v-for="i in 3" :icon="faDisplay" :key="i" />
     </template>
+    <template v-if="hasError">
+      <p class="textError">{{ $t("error-no-data") }}</p>
+    </template>
+    <template v-else>
     <InfraVmItem
       v-for="vmOpaqueRef in vmOpaqueRefs"
       :key="vmOpaqueRef"
       :vm-opaque-ref="vmOpaqueRef"
     />
+    </template>
   </ul>
 </template>
 
@@ -24,9 +29,20 @@ const props = defineProps<{
 }>();
 
 const vmStore = useVmStore();
-const { opaqueRefsByHostRef, isReady } = storeToRefs(vmStore);
+const { opaqueRefsByHostRef, isReady, hasError } = storeToRefs(vmStore);
 
 const vmOpaqueRefs = computed(() =>
   opaqueRefsByHostRef.value.get(props.hostOpaqueRef ?? "OpaqueRef:NULL")
 );
 </script>
+
+<style scoped>
+
+.textError{
+  padding-left: 3rem;
+font-weight: 700;
+font-size: 16px;
+line-height: 150%;
+color: var(--color-red-vates-base);
+}
+</style>
