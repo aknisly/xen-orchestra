@@ -5,35 +5,29 @@
   </div>
 </template>
 
-<style scoped>.nodata{
-  text-align:center;
+<style scoped>
+.nodata {
+  text-align: center;
 }
 
-.img{
+.img {
   display: block;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 1em;
   width: 17em;
   height: 13em;
-
 }
-.errorText{
-  margin:auto;
+.errorText {
+  margin: auto;
   width: 8em;
   height: 3.75em;
-
-font-family: 'Poppins';
-font-style: normal;
-font-weight: 500;
-font-size: 1.25em;
-line-height: 150%;
-
-
-text-align: center;
-color: var(--color-red-vates-base);
-
-
-
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 1.25em;
+  line-height: 150%;
+  text-align: center;
+  color: var(--color-red-vates-base);
 }
 </style>

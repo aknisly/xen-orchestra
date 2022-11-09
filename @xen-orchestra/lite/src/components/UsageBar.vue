@@ -22,6 +22,11 @@
       <slot :total-percent="computedData.totalPercentUsage" name="footer" />
     </template>
     <UiSpinner v-else class="spinner" />
+    <!--
+      <div v-else>
+      <NoData />
+    </div>
+    -->
   </div>
 </template>
 

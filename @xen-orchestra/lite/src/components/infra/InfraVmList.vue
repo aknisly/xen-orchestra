@@ -7,11 +7,11 @@
       <p class="textError">{{ $t("error-no-data") }}</p>
     </template>
     <template v-else>
-    <InfraVmItem
-      v-for="vmOpaqueRef in vmOpaqueRefs"
-      :key="vmOpaqueRef"
-      :vm-opaque-ref="vmOpaqueRef"
-    />
+      <InfraVmItem
+        v-for="vmOpaqueRef in vmOpaqueRefs"
+        :key="vmOpaqueRef"
+        :vm-opaque-ref="vmOpaqueRef"
+      />
     </template>
   </ul>
 </template>
@@ -37,12 +37,11 @@ const vmOpaqueRefs = computed(() =>
 </script>
 
 <style scoped>
-
-.textError{
+.textError {
   padding-left: 3rem;
-font-weight: 700;
-font-size: 16px;
-line-height: 150%;
-color: var(--color-red-vates-base);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-red-vates-base);
 }
 </style>
