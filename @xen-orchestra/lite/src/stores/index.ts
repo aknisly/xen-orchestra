@@ -26,9 +26,8 @@ export function createRecordContext<T extends XenApiRecord>(
     try {
       await xapiRecordsStore.loadRecords(objectType);
     } catch (error) {
-      isReady.value = true;
       hasError.value = true;
-      throw error;
+      console.error("stores#createRecordContext", error);
     }
 
     isReady.value = true;
