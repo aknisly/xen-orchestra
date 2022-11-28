@@ -94,12 +94,6 @@ v16.14.0
 
 If not, see [this page](https://nodejs.org/en/download/package-manager/) for instructions on how to install Node.
 
-#### Yarn
-
-Yarn is a package manager that offers more guarantees than npm.
-
-See [this page](https://yarnpkg.com/en/docs/install#debian-stable) for instructions on how to install Yarn.
-
 #### Packages
 
 XO needs the following packages to be installed. Redis is used as a database by XO.
@@ -130,12 +124,12 @@ git clone -b master https://github.com/vatesfr/xen-orchestra
 
 ### Installing dependencies
 
-Now that you have the code, you can enter the `xen-orchestra` directory and use `yarn` to install other dependencies. Then finally build it using `yarn build`. Be sure to run `yarn` commands as the same user you will be using to run Xen Orchestra:
+Now that you have the code, you can enter the `xen-orchestra` directory and use `npm ci` to install other dependencies. Then finally build it using `npm run build`. Be sure to run `npm` commands as the same user you will be using to run Xen Orchestra:
 
 ```
 $ cd xen-orchestra
-$ yarn
-$ yarn build
+$ npm ci
+$ npm run build
 ```
 
 Now you have to create a config file for `xo-server`:
@@ -153,7 +147,7 @@ In this config file, you can change default ports (80 and 443) for xo-server. If
 You can try to start xo-server to see if it works. You should have something like this:
 
 ```
-$ yarn start
+$ npm run start
 WebServer listening on localhost:80
 [INFO] Default user: "admin@admin.net" with password "admin"
 ```
@@ -163,7 +157,7 @@ WebServer listening on localhost:80
 The only part you need to launch is xo-server, which is quite easy to do. From the `xen-orchestra/packages/xo-server` directory, run the following:
 
 ```
-$ yarn start
+$ npm run start
 ```
 
 That's it! Use your browser to visit the xo-server IP address, and it works! :)
@@ -177,8 +171,8 @@ If you would like to update your current version, enter your `xen-orchestra` dir
 $ git checkout .
 
 $ git pull --ff-only
-$ yarn
-$ yarn build
+$ npm ci
+$ npm run build
 ```
 
 Then restart Xen Orchestra if it was running.
@@ -236,8 +230,8 @@ Exceptional individual contributers are awarded with a free XOA Premium subscrip
 If you have problems during the building phase, follow these steps in your `xen-orchestra` directory:
 
 1. `rm -rf node_modules`
-1. `yarn`
-1. `yarn build`
+1. `npm ci`
+1. `npm run build`
 
 ### FreeBSD
 
@@ -278,7 +272,7 @@ service redis start
 If you are using OpenBSD, you need to install these packages:
 
 ```
-pkg_add gmake redis python--%2.7 git node autoconf yarn
+pkg_add gmake redis python--%2.7 git node autoconf
 ```
 
 A few of the npm packages look for system binaries as part of their installation, and if missing will try to build it themselves. Installing these will save some time and allow for easier upgrades later:
@@ -301,10 +295,10 @@ ulimit -n 10240
 ln -s /usr/local/bin/node /tmp/node
 ```
 
-If `yarn` cannot find Python, give it an hand :
+If `npm` cannot find Python, give it an hand :
 
 ```
-PYTHON=/usr/local/bin/python2 yarn
+PYTHON=/usr/local/bin/python2 npm
 ```
 
 Enable redis on boot with:
