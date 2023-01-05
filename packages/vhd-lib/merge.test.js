@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, test } = require('test')
+const { strict:assert } = require('assert')
 
 const fs = require('fs-extra')
 const rimraf = require('rimraf')
@@ -16,7 +17,6 @@ const { checkFile, createRandomFile, convertFromRawToVhd } = require('./tests/ut
 let tempDir = null
 let handler
 let disposeHandler
-jest.setTimeout(60000)
 
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
@@ -65,7 +65,7 @@ test('merge works in normal cases', async () => {
     const fd = await fs.open(`${tempDir}/${file}`, 'r')
     await fs.read(fd, buffer, 0, buffer.length, offset)
 
-    expect(buffer.equals(blockContent)).toEqual(true)
+    assert.equal(buffer.equals(blockContent), true)
     offset += parentVhd.header.blockSize
   }
 })
@@ -99,7 +99,7 @@ test('it can resume a simple merge ', async () => {
     })
   )
   // expect merge to fail since child header is not ok
-  await expect(async () => await mergeVhdChain(handler, ['parent.vhd', 'child1.vhd'])).rejects.toThrow()
+  await assert.rejects(async () => await mergeVhdChain(handler, ['parent.vhd', 'child1.vhd']))
 
   await handler.unlink('.parent.vhd.merge.json')
   await handler.writeFile(
@@ -114,7 +114,7 @@ test('it can resume a simple merge ', async () => {
     })
   )
   // expect merge to fail since parent header is not ok
-  await expect(async () => await mergeVhdChain(handler, ['parent.vhd', 'child1.vhd'])).rejects.toThrow()
+  await assert.rejects(async () => await mergeVhdChain(handler, ['parent.vhd', 'child1.vhd']))
 
   // break the end footer of parent
   const size = await handler.getSize('parent.vhd')
@@ -124,7 +124,7 @@ test('it can resume a simple merge ', async () => {
   handler.write(fd, buffer, size)
   await handler.closeFile(fd)
   // check vhd should fail
-  await expect(async () => await parentVhd.readHeaderAndFooter()).rejects.toThrow()
+  await assert.rejects(async () => await parentVhd.readHeaderAndFooter())
 
   await handler.unlink('.parent.vhd.merge.json')
   await handler.writeFile(
@@ -158,7 +158,7 @@ test('it can resume a simple merge ', async () => {
     const fd = await fs.open(file, 'r')
     await fs.read(fd, buffer, 0, buffer.length, offset)
 
-    expect(buffer.equals(blockContent)).toEqual(true)
+    assert.equal(buffer.equals(blockContent), true)
     offset += childVhd.header.blockSize
   }
 })
@@ -200,12 +200,12 @@ test('it can resume a failed renaming', async () => {
   await mergeVhdChain(handler, [parentName, childName])
 
   // parent have been renamed
-  expect(await fs.exists(`${tempDir}/${parentName}`)).toBeFalsy()
-  expect(await fs.exists(`${tempDir}/${childName}`)).toBeTruthy()
-  expect(await fs.exists(`${tempDir}/.${parentName}.merge.json`)).toBeFalsy()
+  assert.equal(!!(await fs.exists(`${tempDir}/${parentName}`)), false)
+  assert.equal(!!(await fs.exists(`${tempDir}/${childName}`)), true)
+  assert.equal(!!(await fs.exists(`${tempDir}/.${parentName}.merge.json`)), false)
   // we shouldn't have moved the data, but the child data should have been merged into parent
-  expect(await fs.exists(`${tempDir}/parentdata.vhd`)).toBeTruthy()
-  expect(await fs.exists(`${tempDir}/childdata.vhd`)).toBeFalsy()
+  assert.equal(!!(await fs.exists(`${tempDir}/parentdata.vhd`)), true)
+  assert.equal(!!(await fs.exists(`${tempDir}/childdata.vhd`)), false)
 
   Disposable.use(openVhd(handler, childName), async mergedVhd => {
     await mergedVhd.readBlockAllocationTable()
@@ -217,7 +217,7 @@ test('it can resume a failed renaming', async () => {
       const blockContent = block.data
       const buffer = Buffer.alloc(blockContent.length)
       await fs.read(fd, buffer, 0, buffer.length, offset)
-      expect(buffer.equals(blockContent)).toEqual(true)
+      assert.equal(buffer.equals(blockContent), true)
       offset += childVhd.header.blockSize
     }
   })
@@ -236,12 +236,12 @@ test('it can resume a failed renaming', async () => {
     })
   )
   await mergeVhdChain(handler, [parentName, childName])
-  expect(await fs.exists(`${tempDir}/${parentName}`)).toBeFalsy()
-  expect(await fs.exists(`${tempDir}/${childName}`)).toBeTruthy()
+  assert.equal(!!(await fs.exists(`${tempDir}/${parentName}`)), false)
+  assert.equal(!!(await fs.exists(`${tempDir}/${childName}`)), true)
   // we shouldn't have moved the data, but the child data should have been merged into parent
-  expect(await fs.exists(`${tempDir}/parentdata.vhd`)).toBeTruthy()
-  expect(await fs.exists(`${tempDir}/childdata.vhd`)).toBeFalsy()
-  expect(await fs.exists(`${tempDir}/.${parentName}.merge.json`)).toBeFalsy()
+  assert.equal(!!(await fs.exists(`${tempDir}/parentdata.vhd`)), true)
+  assert.equal(!!(await fs.exists(`${tempDir}/childdata.vhd`)), false)
+  assert.equal(!!(await fs.exists(`${tempDir}/.${parentName}.merge.json`)), false)
 })
 
 test('it can resume a multiple merge ', async () => {
@@ -288,9 +288,7 @@ test('it can resume a multiple merge ', async () => {
   )
 
   // should fail since the merge state file has only data of parent and child
-  await expect(
-    async () => await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd'])
-  ).rejects.toThrow()
+  await assert.rejects(async () => await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd']))
   // merge
   await handler.unlink(`.parent.vhd.merge.json`)
   await handler.writeFile(
@@ -308,10 +306,10 @@ test('it can resume a multiple merge ', async () => {
   )
   // it should succeed
   await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd'], { removeUnused: true })
-  expect(await fs.exists(`${tempDir}/parent.vhd`)).toBeFalsy()
-  expect(await fs.exists(`${tempDir}/child.vhd`)).toBeFalsy()
-  expect(await fs.exists(`${tempDir}/grandchild.vhd`)).toBeTruthy()
-  expect(await fs.exists(`${tempDir}/.parent.vhd.merge.json`)).toBeFalsy()
+  assert.equal(!!(await fs.exists(`${tempDir}/parent.vhd`)), false)
+  assert.equal(!!(await fs.exists(`${tempDir}/child.vhd`)), false)
+  assert.equal(!!(await fs.exists(`${tempDir}/grandchild.vhd`)), true)
+  assert.equal(!!(await fs.exists(`${tempDir}/.parent.vhd.merge.json`)), false)
 })
 
 test('it merge multiple child in one pass ', async () => {
@@ -359,7 +357,7 @@ test('it merge multiple child in one pass ', async () => {
     const buffer = Buffer.alloc(blockContent.length)
     const fd = await fs.open(file, 'r')
     await fs.read(fd, buffer, 0, buffer.length, offset)
-    expect(buffer.equals(blockContent)).toEqual(true)
+    assert.equal(buffer.equals(blockContent), true)
     offset += parentVhd.header.blockSize
   }
 })

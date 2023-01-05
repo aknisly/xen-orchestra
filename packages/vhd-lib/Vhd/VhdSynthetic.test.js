@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, test } = require('test')
+const { strict:assert } = require('assert')
 
 const rimraf = require('rimraf')
 const tmp = require('tmp')
@@ -12,8 +13,6 @@ const { createRandomFile, convertFromRawToVhd } = require('../tests/utils')
 const { openVhd, chainVhd, VhdSynthetic } = require('..')
 
 let tempDir = null
-
-jest.setTimeout(60000)
 
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
@@ -58,31 +57,31 @@ test('It can read block and parent locator from a synthetic vhd', async () => {
     const syntheticVhd = yield VhdSynthetic.open(handler, [bigVhdFileName, smallVhdFileName])
     await syntheticVhd.readBlockAllocationTable()
 
-    expect(syntheticVhd.header.diskType).toEqual(bigVhd.header.diskType)
-    expect(syntheticVhd.header.parentTimestamp).toEqual(bigVhd.header.parentTimestamp)
+    assert.deepEqual(syntheticVhd.header.diskType, bigVhd.header.diskType)
+    assert.deepEqual(syntheticVhd.header.parentTimestamp, bigVhd.header.parentTimestamp)
 
     // first two block should be from small
     const buf = Buffer.alloc(syntheticVhd.sectorsPerBlock * SECTOR_SIZE, 0)
     let content = (await syntheticVhd.readBlock(0)).data
     await handler.read(smallRawFileName, buf, 0)
-    expect(content.equals(buf)).toEqual(true)
+    assert.equal(content.equals(buf), true)
 
     content = (await syntheticVhd.readBlock(1)).data
     await handler.read(smallRawFileName, buf, buf.length)
-    expect(content.equals(buf)).toEqual(true)
+    assert.equal(content.equals(buf), true)
 
     // the next one from big
 
     content = (await syntheticVhd.readBlock(2)).data
     await handler.read(bigRawFileName, buf, buf.length * 2)
-    expect(content.equals(buf)).toEqual(true)
+    assert.equal(content.equals(buf), true)
 
     content = (await syntheticVhd.readBlock(3)).data
     await handler.read(bigRawFileName, buf, buf.length * 3)
-    expect(content.equals(buf)).toEqual(true)
+    assert.equal(content.equals(buf), true)
 
     // the parent locator should the one of the root vhd
     const parentLocator = await syntheticVhd.readParentLocator(0)
-    expect(parentLocator.platformCode).toEqual(PLATFORMS.W2KU)
+    assert.deepEqual(parentLocator.platformCode, PLATFORMS.W2KU)
   })
 })

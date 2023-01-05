@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, test } = require('test')
+const { strict:assert } = require('assert')
 
 const rimraf = require('rimraf')
 const tmp = require('tmp')
@@ -14,8 +15,6 @@ const { createRandomFile, convertFromRawToVhd, convertToVhdDirectory } = require
 let tempDir = null
 let handler
 let disposeHandler
-
-jest.setTimeout(60000)
 
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
@@ -64,9 +63,9 @@ test('Can coalesce block', async () => {
     await parentVhd.writeBlockAllocationTable()
     let parentBlockData = (await parentVhd.readBlock(0)).data
     // block should be present in parent
-    expect(parentBlockData.equals(childBlockData)).toEqual(true)
+    assert.equal(parentBlockData.equals(childBlockData), true)
     // block should not be in child since it's a rename  for vhd directory
-    await expect(childDirectoryVhd.readBlock(0)).rejects.toThrowError()
+    await assert.rejects(childDirectoryVhd.readBlock(0))
 
     childBlockData = (await childFileVhd.readBlock(1)).data
     await parentVhd.mergeBlock(childFileVhd, 1)
@@ -74,7 +73,7 @@ test('Can coalesce block', async () => {
     await parentVhd.writeBlockAllocationTable()
     parentBlockData = (await parentVhd.readBlock(1)).data
     // block should be present in parent in case of mixed vhdfile/vhddirectory
-    expect(parentBlockData.equals(childBlockData)).toEqual(true)
+    assert.equal(parentBlockData.equals(childBlockData), true)
     // block should still be child
     await childFileVhd.readBlock(1)
   })
@@ -100,26 +99,26 @@ test('compressed blocks and metadata works', async () => {
       .all[(await compressedVhd.writeHeader(), await compressedVhd.writeFooter(), await compressedVhd.writeBlockAllocationTable())]
 
     // compressed vhd have a metadata file
-    expect(await fs.exists(`${tempDir}/compressed.vhd/chunk-filters.json`)).toEqual(true)
+    assert.equal(await fs.exists(`${tempDir}/compressed.vhd/chunk-filters.json`), true)
     const metada = JSON.parse(await handler.readFile('compressed.vhd/chunk-filters.json'))
-    expect(metada[0]).toEqual('gzip')
+    assert.equal(metada[0], 'gzip')
 
     // compressed vhd should not be broken
     await compressedVhd.readHeaderAndFooter()
     await compressedVhd.readBlockAllocationTable()
 
     // check that footer and header are not modified
-    expect(compressedVhd.footer).toEqual(vhd.footer)
-    expect(compressedVhd.header).toEqual(vhd.header)
+    assert.deepEqual(compressedVhd.footer, vhd.footer)
+    assert.deepEqual(compressedVhd.header, vhd.header)
 
     // their block content should not have changed
     let counter = 0
     for await (const block of compressedVhd.blocks()) {
       const source = await vhd.readBlock(block.id)
-      expect(source.data.equals(block.data)).toEqual(true)
+      assert.equal(source.data.equals(block.data), true)
       counter++
     }
     // neither the number of blocks
-    expect(counter).toEqual(2)
+    assert.equal(counter, 2)
   })
 })

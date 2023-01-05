@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, describe, it } = require('test')
+const { strict:assert } = require('assert')
 
 const execa = require('execa')
 const fs = require('fs-extra')
@@ -52,7 +53,7 @@ describe('createVhdStreamWithLength', () => {
 
         // ensure the guessed length correspond to the stream length
         const { size: outputSize } = await fs.stat(outputVhd)
-        expect(length).toEqual(outputSize)
+        assert.equal(length, outputSize)
 
         // ensure the generated VHD is correct and contains the same data
         const outputRaw = `${tempDir}/output.raw`
@@ -83,14 +84,14 @@ describe('createVhdStreamWithLength', () => {
     await pFromCallback(cb => endOfFile.end(footer, cb))
     const { size: longerSize } = await fs.stat(vhdName)
     // check input file has been lengthened
-    expect(longerSize).toEqual(vhdSize + FOOTER_SIZE)
+    assert.equal(longerSize, vhdSize + FOOTER_SIZE)
     const result = await createVhdStreamWithLength(await createReadStream(vhdName))
-    expect(result.length).toEqual(vhdSize)
+    assert.equal(result.length, vhdSize)
     const outputFileStream = await createWriteStream(outputVhdName)
     await pFromCallback(cb => pipeline(result, outputFileStream, cb))
     const { size: outputSize } = await fs.stat(outputVhdName)
     // check out file has been shortened again
-    expect(outputSize).toEqual(vhdSize)
+    assert.equal(outputSize, vhdSize)
     await execa('qemu-img', ['compare', outputVhdName, vhdName])
   })
 })

@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, test } = require('test')
+const { strict:assert } = require('assert')
 
 const rimraf = require('rimraf')
 const tmp = require('tmp')
@@ -14,8 +15,6 @@ const { createRandomFile, convertFromRawToVhd, createRandomVhdDirectory } = requ
 const { VhdAbstract } = require('./Vhd/VhdAbstract')
 
 let tempDir
-
-jest.setTimeout(60000)
 
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
@@ -34,14 +33,14 @@ test('It opens a vhd file ( alias or not)', async () => {
   await Disposable.use(async function* () {
     const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
     const vhd = yield openVhd(handler, 'randomfile.vhd')
-    expect(vhd.header.cookie).toEqual('cxsparse')
-    expect(vhd.footer.cookie).toEqual('conectix')
+    assert.equal(vhd.header.cookie, 'cxsparse')
+    assert.equal(vhd.footer.cookie, 'conectix')
 
     const aliasFileName = `out.alias.vhd`
     await VhdAbstract.createAlias(handler, aliasFileName, 'randomfile.vhd')
     const alias = yield openVhd(handler, aliasFileName)
-    expect(alias.header.cookie).toEqual('cxsparse')
-    expect(alias.footer.cookie).toEqual('conectix')
+    assert.equal(alias.header.cookie, 'cxsparse')
+    assert.equal(alias.footer.cookie, 'conectix')
   })
 })
 
@@ -53,14 +52,14 @@ test('It opens a vhd directory', async () => {
   await Disposable.use(async function* () {
     const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
     const vhd = yield openVhd(handler, 'randomfile.dir')
-    expect(vhd.header.cookie).toEqual('cxsparse')
-    expect(vhd.footer.cookie).toEqual('conectix')
+    assert.equal(vhd.header.cookie, 'cxsparse')
+    assert.equal(vhd.footer.cookie, 'conectix')
 
     const aliasFileName = `out.alias.vhd`
     await VhdAbstract.createAlias(handler, aliasFileName, 'randomfile.dir')
     const alias = yield openVhd(handler, aliasFileName)
-    expect(alias.header.cookie).toEqual('cxsparse')
-    expect(alias.footer.cookie).toEqual('conectix')
+    assert.equal(alias.header.cookie, 'cxsparse')
+    assert.equal(alias.footer.cookie, 'conectix')
   })
 })
 
@@ -68,45 +67,45 @@ test('It fails correctly when opening a broken vhd', async () => {
   const initalSize = 4
 
   // emtpy file
-  await expect(
+  await assert.rejects(
     Disposable.use(async function* () {
       const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
       yield openVhd(handler, 'randomfile.vhd')
     })
-  ).rejects.toThrow()
+  )
 
   const rawFileName = `${tempDir}/randomfile.vhd`
   await createRandomFile(rawFileName, initalSize)
   // broken file
-  await expect(
+  await assert.rejects(
     Disposable.use(async function* () {
       const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
       yield openVhd(handler, 'randomfile.vhd')
     })
-  ).rejects.toThrow()
+  )
 
   // empty dir
   await fs.mkdir(`${tempDir}/dir.vhd`)
-  await expect(
+  await assert.rejects(
     Disposable.use(async function* () {
       const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
       const vhd = yield openVhd(handler, 'dir.vhd')
       await vhd.readBlockAllocationTable()
     })
-  ).rejects.toThrow()
+  )
   // dir with missing parts
   await createRandomVhdDirectory(`${tempDir}/dir.vhd`, initalSize)
 
   const targets = ['header', 'footer', 'bat']
   for (const target of targets) {
     await fs.rename(`${tempDir}/dir.vhd/${target}`, `${tempDir}/dir.vhd/moved`)
-    await expect(
+    await assert.rejects(
       Disposable.use(async function* () {
         const handler = yield getSyncedHandler({ url: `file://${tempDir}` })
         const vhd = yield openVhd(handler, 'dir.vhd')
         await vhd.readBlockAllocationTable()
       })
-    ).rejects.toThrow()
+    )
     await fs.rename(`${tempDir}/dir.vhd/moved`, `${tempDir}/dir.vhd/${target}`)
   }
 })
@@ -114,7 +113,7 @@ test('It fails correctly when opening a broken vhd', async () => {
 test('It fails correctly when opening a vhdfile on an encrypted remote', async () => {
   const initalSize = 4
   const rawFileName = `${tempDir}/randomfile.vhd`
-  await expect(
+  await assert.rejects(
     Disposable.use(async function* () {
       const handler = yield getSyncedHandler({
         url: `file://${tempDir}?encryptionKey="73c1838d7d8a6088ca2317fb5f29cd00"`,
@@ -123,5 +122,5 @@ test('It fails correctly when opening a vhdfile on an encrypted remote', async (
       await createRandomFile(rawFileName, initalSize)
       yield openVhd(handler, 'randomfile.vhd')
     })
-  ).rejects.toThrow()
+  )
 })

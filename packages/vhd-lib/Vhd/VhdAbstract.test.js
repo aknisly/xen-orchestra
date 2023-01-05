@@ -17,8 +17,6 @@ const { unpackHeader, unpackFooter } = require('./_utils')
 
 let tempDir
 
-// jest.setTimeout(60000)
-
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
 })

@@ -1,6 +1,7 @@
 'use strict'
 
-/* eslint-env jest */
+const { beforeEach, afterEach, test } = require('test')
+const { strict:assert } = require('assert')
 
 const execa = require('execa')
 const fs = require('fs-extra')
@@ -26,8 +27,6 @@ const {
 let tempDir = null
 let handler
 let disposeHandler
-
-jest.setTimeout(60000)
 
 beforeEach(async () => {
   tempDir = await pFromCallback(cb => tmp.dir(cb))
@@ -58,9 +57,9 @@ test('respect the checkSecondFooter flag', async () => {
   // not using openVhd to be able to call readHeaderAndFooter separatly
   const vhd = new VhdFile(handler, 'randomfile.vhd')
 
-  await expect(async () => await vhd.readHeaderAndFooter()).rejects.toThrow()
-  await expect(async () => await vhd.readHeaderAndFooter(true)).rejects.toThrow()
-  await expect(await vhd.readHeaderAndFooter(false)).toEqual(undefined)
+  assert.rejects(async () => await vhd.readHeaderAndFooter())
+  assert.rejects(async () => await vhd.readHeaderAndFooter(true))
+  assert.equal(await vhd.readHeaderAndFooter(false), undefined)
 })
 
 test('blocks can be moved', async () => {
@@ -76,7 +75,7 @@ test('blocks can be moved', async () => {
   await newVhd._freeFirstBlockSpace(8000000)
   const recoveredFileName = `${tempDir}/recovered`
   await recoverRawContent(vhdFileName, recoveredFileName, originalSize)
-  expect((await fs.readFile(recoveredFileName)).equals(await fs.readFile(rawFileName))).toEqual(true)
+  assert.equal((await fs.readFile(recoveredFileName)).equals(await fs.readFile(rawFileName)), true)
 })
 
 test('the BAT MSB is not used for sign', async () => {
@@ -119,7 +118,7 @@ test('the BAT MSB is not used for sign', async () => {
       end: hugePositionBytes + randomBuffer.length - 1,
     })
   )
-  expect(recovered.equals(randomBuffer)).toEqual(true)
+  assert.equal(recovered.equals(randomBuffer), true)
 })
 
 test('writeData on empty file', async () => {
@@ -136,7 +135,7 @@ test('writeData on empty file', async () => {
   await newVhd.writeData(0, randomData)
   const recoveredFileName = `${tempDir}/recovered`
   await recoverRawContent(emptyFileName, recoveredFileName, originalSize)
-  expect((await fs.readFile(recoveredFileName)).equals(randomData)).toEqual(true)
+  assert.equal((await fs.readFile(recoveredFileName)).equals(randomData), true)
 })
 
 test('writeData in 2 non-overlaping operations', async () => {
@@ -155,7 +154,7 @@ test('writeData in 2 non-overlaping operations', async () => {
   await newVhd.writeData(0, randomData.slice(0, splitPointSectors * 512))
   await newVhd.writeData(splitPointSectors, randomData.slice(splitPointSectors * 512))
   await recoverRawContent(emptyFileName, recoveredFileName, originalSize)
-  expect((await fs.readFile(recoveredFileName)).equals(randomData)).toEqual(true)
+  assert.equal((await fs.readFile(recoveredFileName)).equals(randomData), true)
 })
 
 test('writeData in 2 overlaping operations', async () => {
@@ -175,7 +174,7 @@ test('writeData in 2 overlaping operations', async () => {
   await newVhd.writeData(0, randomData.slice(0, endFirstWrite * 512))
   await newVhd.writeData(startSecondWrite, randomData.slice(startSecondWrite * 512))
   await recoverRawContent(emptyFileName, recoveredFileName, originalSize)
-  expect((await fs.readFile(recoveredFileName)).equals(randomData)).toEqual(true)
+  assert.equal((await fs.readFile(recoveredFileName)).equals(randomData), true)
 })
 
 test('BAT can be extended and blocks moved', async () => {
@@ -192,7 +191,7 @@ test('BAT can be extended and blocks moved', async () => {
   await newVhd.ensureBatSize(2000)
   await newVhd.writeBlockAllocationTable()
   await recoverRawContent(vhdFileName, recoveredFileName, originalSize)
-  expect((await fs.readFile(recoveredFileName)).equals(await fs.readFile(rawFileName))).toEqual(true)
+  assert.equal((await fs.readFile(recoveredFileName)).equals(await fs.readFile(rawFileName)), true)
 })
 
 test('Can coalesce block', async () => {
@@ -225,13 +224,13 @@ test('Can coalesce block', async () => {
     await parentVhd.writeBlockAllocationTable()
     let parentBlockData = (await parentVhd.readBlock(0)).data
     let childBlockData = (await childFileVhd.readBlock(0)).data
-    expect(parentBlockData.equals(childBlockData)).toEqual(true)
+    assert.equal(parentBlockData.equals(childBlockData), true)
 
     await parentVhd.mergeBlock(childDirectoryVhd, 0)
     await parentVhd.writeFooter()
     await parentVhd.writeBlockAllocationTable()
     parentBlockData = (await parentVhd.readBlock(0)).data
     childBlockData = (await childDirectoryVhd.readBlock(0)).data
-    expect(parentBlockData.equals(childBlockData)).toEqual(true)
+    assert.equal(parentBlockData.equals(childBlockData), true)
   })
 })
