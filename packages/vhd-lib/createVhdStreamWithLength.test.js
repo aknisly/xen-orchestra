@@ -16,19 +16,19 @@ const createVhdStreamWithLength = require('./createVhdStreamWithLength.js')
 const { FOOTER_SIZE } = require('./_constants')
 const { createRandomFile, convertFromRawToVhd, convertFromVhdToRaw } = require('./tests/utils')
 
-let tempDir = null
-
-beforeEach(async () => {
-  tempDir = await pFromCallback(cb => tmp.dir(cb))
-})
-
-afterEach(async () => {
-  await pFromCallback(cb => rimraf(tempDir, cb))
-})
-
 const forOwn = (object, cb) => Object.keys(object).forEach(key => cb(object[key], key, object))
 
 describe('createVhdStreamWithLength', () => {
+  let tempDir = null
+
+  beforeEach(async () => {
+    tempDir = await pFromCallback(cb => tmp.dir(cb))
+  })
+
+  afterEach(async () => {
+    await pFromCallback(cb => rimraf(tempDir, cb))
+  })
+
   forOwn(
     {
       // qemu-img requires this length or it fill with null bytes which breaks
