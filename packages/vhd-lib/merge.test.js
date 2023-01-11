@@ -200,12 +200,12 @@ test('it can resume a failed renaming', async () => {
   await mergeVhdChain(handler, [parentName, childName])
 
   // parent have been renamed
-  assert.equal(await fs.access(`${tempDir}/${parentName}`), false)
-  assert.equal(await fs.access(`${tempDir}/${childName}`), true)
-  assert.equal(await fs.access(`${tempDir}/.${parentName}.merge.json`), false)
+  assert.equal(await fs.stat(`${tempDir}/${parentName}`), false)
+  assert.equal(await fs.stat(`${tempDir}/${childName}`), true)
+  assert.equal(await fs.stat(`${tempDir}/.${parentName}.merge.json`), false)
   // we shouldn't have moved the data, but the child data should have been merged into parent
-  assert.equal(await fs.access(`${tempDir}/parentdata.vhd`), true)
-  assert.equal(await fs.access(`${tempDir}/childdata.vhd`), false)
+  assert.equal(await fs.stat(`${tempDir}/parentdata.vhd`), true)
+  assert.equal(await fs.stat(`${tempDir}/childdata.vhd`), false)
 
   Disposable.use(openVhd(handler, childName), async mergedVhd => {
     await mergedVhd.readBlockAllocationTable()
@@ -236,12 +236,12 @@ test('it can resume a failed renaming', async () => {
     })
   )
   await mergeVhdChain(handler, [parentName, childName])
-  assert.equal(await fs.access(`${tempDir}/${parentName}`), false)
-  assert.equal(await fs.access(`${tempDir}/${childName}`), true)
+  assert.equal(await fs.stat(`${tempDir}/${parentName}`), false)
+  assert.equal(await fs.stat(`${tempDir}/${childName}`), true)
   // we shouldn't have moved the data, but the child data should have been merged into parent
-  assert.equal(await fs.access(`${tempDir}/parentdata.vhd`), true)
-  assert.equal(await fs.access(`${tempDir}/childdata.vhd`), false)
-  assert.equal(await fs.access(`${tempDir}/.${parentName}.merge.json`), false)
+  assert.equal(await fs.stat(`${tempDir}/parentdata.vhd`), true)
+  assert.equal(await fs.stat(`${tempDir}/childdata.vhd`), false)
+  assert.equal(await fs.stat(`${tempDir}/.${parentName}.merge.json`), false)
 })
 
 test('it can resume a multiple merge ', async () => {
@@ -306,10 +306,10 @@ test('it can resume a multiple merge ', async () => {
   )
   // it should succeed
   await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd'], { removeUnused: true })
-  assert.equal(await fs.access(`${tempDir}/parent.vhd`), false)
-  assert.equal(await fs.access(`${tempDir}/child.vhd`), false)
-  assert.equal(await fs.access(`${tempDir}/grandchild.vhd`), true)
-  assert.equal(await fs.access(`${tempDir}/.parent.vhd.merge.json`), false)
+  assert.equal(await fs.stat(`${tempDir}/parent.vhd`), false)
+  assert.equal(await fs.stat(`${tempDir}/child.vhd`), false)
+  assert.equal(await fs.stat(`${tempDir}/grandchild.vhd`), true)
+  assert.equal(await fs.stat(`${tempDir}/.parent.vhd.merge.json`), false)
 })
 
 test('it merge multiple child in one pass ', async () => {
