@@ -82,6 +82,6 @@ test('It can read block and parent locator from a synthetic vhd', async () => {
 
     // the parent locator should the one of the root vhd
     const parentLocator = await syntheticVhd.readParentLocator(0)
-    assert.deepEqual(parentLocator.platformCode, PLATFORMS.W2KU)
+    assert.equal(parentLocator.platformCode, PLATFORMS.W2KU)
   })
 })

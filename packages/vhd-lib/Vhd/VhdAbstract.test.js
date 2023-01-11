@@ -185,8 +185,8 @@ test('it can create a vhd stream', async () => {
     const parentLocatorData = buffer.slice(start, start + SECTOR_SIZE)
     assert.equal(parentLocatorData.equals(aligned), true)
     start += SECTOR_SIZE // parent locator
-    assert.deepEqual(length, start + initialNbBlocks * vhd.fullBlockSize + FOOTER_SIZE)
-    assert.deepEqual(stream.length, buffer.length)
+    assert.equal(length, start + initialNbBlocks * vhd.fullBlockSize + FOOTER_SIZE)
+    assert.equal(stream.length, buffer.length)
     // blocks
     const blockBuf = Buffer.alloc(vhd.sectorsPerBlock * SECTOR_SIZE, 0)
     for (let i = 0; i < initialNbBlocks; i++) {
