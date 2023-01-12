@@ -19,7 +19,9 @@ let handler
 let disposeHandler
 
 const exists = (path) => {
-  return !(assert.throws(async () => await fs.access(path)))
+  return !(assert.throws(async () => await fs.access(path), {
+    code: 'ENOENT'
+  }))
 }
 
 describe('Merge', async () => {
