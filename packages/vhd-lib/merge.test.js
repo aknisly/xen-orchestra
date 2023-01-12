@@ -19,10 +19,7 @@ let handler
 let disposeHandler
 
 const exists = (path) => {
-  fs.access(path, fs.constants.F_OK, (err) => {
-    if (err) return false
-    else return true
-  })
+  return !(assert.throws(async () => await fs.access(path)))
 }
 
 describe('Merge', async () => {
