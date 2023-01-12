@@ -3,7 +3,7 @@
 const { beforeEach, afterEach, describe, it } = require('test')
 const { strict:assert } = require('assert')
 
-const fs = require('fs-extra')
+const { fs, constants } = require('fs-extra')
 const rimraf = require('rimraf')
 const tmp = require('tmp')
 const { getSyncedHandler } = require('@xen-orchestra/fs')
@@ -17,6 +17,12 @@ const { checkFile, createRandomFile, convertFromRawToVhd } = require('./tests/ut
 let tempDir = null
 let handler
 let disposeHandler
+
+const exists = async (path) => {
+  await exists(path, constants.F_OK, (err) => {
+    return !err
+  })
+}
 
 describe('Merge', async () => {
   beforeEach(async () => {
@@ -201,12 +207,12 @@ describe('Merge', async () => {
     await mergeVhdChain(handler, [parentName, childName])
 
     // parent have been renamed
-    assert.equal(await fs.access(`${tempDir}/${parentName}`), false)
-    assert.equal(await fs.access(`${tempDir}/${childName}`), true)
-    assert.equal(await fs.access(`${tempDir}/.${parentName}.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/${parentName}`), false)
+    assert.equal(await exists(`${tempDir}/${childName}`), true)
+    assert.equal(await exists(`${tempDir}/.${parentName}.merge.json`), false)
     // we shouldn't have moved the data, but the child data should have been merged into parent
-    assert.equal(await fs.access(`${tempDir}/parentdata.vhd`), true)
-    assert.equal(await fs.access(`${tempDir}/childdata.vhd`), false)
+    assert.equal(await exists(`${tempDir}/parentdata.vhd`), true)
+    assert.equal(await exists(`${tempDir}/childdata.vhd`), false)
 
     Disposable.use(openVhd(handler, childName), async mergedVhd => {
       await mergedVhd.readBlockAllocationTable()
@@ -237,12 +243,12 @@ describe('Merge', async () => {
       })
     )
     await mergeVhdChain(handler, [parentName, childName])
-    assert.equal(await fs.access(`${tempDir}/${parentName}`), false)
-    assert.equal(await fs.access(`${tempDir}/${childName}`), true)
+    assert.equal(await exists(`${tempDir}/${parentName}`), false)
+    assert.equal(await exists(`${tempDir}/${childName}`), true)
     // we shouldn't have moved the data, but the child data should have been merged into parent
-    assert.equal(await fs.access(`${tempDir}/parentdata.vhd`), true)
-    assert.equal(await fs.access(`${tempDir}/childdata.vhd`), false)
-    assert.equal(await fs.access(`${tempDir}/.${parentName}.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/parentdata.vhd`), true)
+    assert.equal(await exists(`${tempDir}/childdata.vhd`), false)
+    assert.equal(await exists(`${tempDir}/.${parentName}.merge.json`), false)
   })
 
   it('can resume a multiple merge', async () => {
@@ -307,10 +313,10 @@ describe('Merge', async () => {
     )
     // it should succeed
     await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd'], { removeUnused: true })
-    assert.equal(await fs.exists(`${tempDir}/parent.vhd`), false)
-    assert.equal(await fs.exists(`${tempDir}/child.vhd`), false)
-    assert.equal(await fs.exists(`${tempDir}/grandchild.vhd`), true)
-    assert.equal(await fs.exists(`${tempDir}/.parent.vhd.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/parent.vhd`), false)
+    assert.equal(await exists(`${tempDir}/child.vhd`), false)
+    assert.equal(await exists(`${tempDir}/grandchild.vhd`), true)
+    assert.equal(await exists(`${tempDir}/.parent.vhd.merge.json`), false)
   })
 
   it('merges multiple children in one pass', async () => {
