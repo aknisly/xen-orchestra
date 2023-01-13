@@ -18,10 +18,15 @@ let tempDir = null
 let handler
 let disposeHandler
 
-function exists(file) {
-  fs.access(file, fs.constants.F_OK, (err) => {
-    return !err
-  })
+async function exists(file) {
+  try {
+      await fs.access(file, fs.constants.F_OK)
+
+      return true;
+  } catch (err) {
+      if (err.code === 'ENOENT') return false;
+      throw err;
+  }
 }
 
 describe('Merge', async () => {
@@ -207,12 +212,12 @@ describe('Merge', async () => {
     await mergeVhdChain(handler, [parentName, childName])
 
     // parent have been renamed
-    assert.equal(exists(`${tempDir}/${parentName}`), false)
-    assert.equal(exists(`${tempDir}/${childName}`), true)
-    assert.equal(exists(`${tempDir}/.${parentName}.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/${parentName}`), false)
+    assert.equal(await exists(`${tempDir}/${childName}`), true)
+    assert.equal(await exists(`${tempDir}/.${parentName}.merge.json`), false)
     // we shouldn't have moved the data, but the child data should have been merged into parent
-    assert.equal(exists(`${tempDir}/parentdata.vhd`), true)
-    assert.equal(exists(`${tempDir}/childdata.vhd`), false)
+    assert.equal(await exists(`${tempDir}/parentdata.vhd`), true)
+    assert.equal(await exists(`${tempDir}/childdata.vhd`), false)
 
     Disposable.use(openVhd(handler, childName), async mergedVhd => {
       await mergedVhd.readBlockAllocationTable()
@@ -243,12 +248,12 @@ describe('Merge', async () => {
       })
     )
     await mergeVhdChain(handler, [parentName, childName])
-    assert.equal(exists(`${tempDir}/${parentName}`), false)
-    assert.equal(exists(`${tempDir}/${childName}`), true)
+    assert.equal(await exists(`${tempDir}/${parentName}`), false)
+    assert.equal(await exists(`${tempDir}/${childName}`), true)
     // we shouldn't have moved the data, but the child data should have been merged into parent
-    assert.equal(exists(`${tempDir}/parentdata.vhd`), true)
-    assert.equal(exists(`${tempDir}/childdata.vhd`), false)
-    assert.equal(exists(`${tempDir}/.${parentName}.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/parentdata.vhd`), true)
+    assert.equal(await exists(`${tempDir}/childdata.vhd`), false)
+    assert.equal(await exists(`${tempDir}/.${parentName}.merge.json`), false)
   })
 
   it('can resume a multiple merge', async () => {
@@ -313,10 +318,10 @@ describe('Merge', async () => {
     )
     // it should succeed
     await mergeVhdChain(handler, ['parent.vhd', 'child.vhd', 'grandchild.vhd'], { removeUnused: true })
-    assert.equal(exists(`${tempDir}/parent.vhd`), false)
-    assert.equal(exists(`${tempDir}/child.vhd`), false)
-    assert.equal(exists(`${tempDir}/grandchild.vhd`), true)
-    assert.equal(exists(`${tempDir}/.parent.vhd.merge.json`), false)
+    assert.equal(await exists(`${tempDir}/parent.vhd`), false)
+    assert.equal(await exists(`${tempDir}/child.vhd`), false)
+    assert.equal(await exists(`${tempDir}/grandchild.vhd`), true)
+    assert.equal(await exists(`${tempDir}/.parent.vhd.merge.json`), false)
   })
 
   it('merges multiple children in one pass', async () => {
