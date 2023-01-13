@@ -18,10 +18,10 @@ let tempDir = null
 let handler
 let disposeHandler
 
-const exists = (path) => {
-  return !(assert.throws(async () => await fs.access(path), {
-    code: 'ENOENT'
-  }))
+const exists = (file) => {
+  fs.access(file, fs.constants.F_OK, (err) => {
+    return !!err
+  })
 }
 
 describe('Merge', async () => {
