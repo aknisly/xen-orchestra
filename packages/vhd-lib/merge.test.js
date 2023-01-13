@@ -18,9 +18,9 @@ let tempDir = null
 let handler
 let disposeHandler
 
-const exists = (file) => {
+function exists(file) {
   fs.access(file, fs.constants.F_OK, (err) => {
-    return !!err
+    return !err
   })
 }
 
