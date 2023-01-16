@@ -54,7 +54,7 @@ export default function useFetchStats<
           return;
         }
 
-        const objectStore = await STORES_BY_OBJECT_TYPE[type]();
+        const objectStore = STORES_BY_OBJECT_TYPE[type]();
 
         if (objectStore.hasError) {
           stats.value.get(object.uuid)!.stats = null;
