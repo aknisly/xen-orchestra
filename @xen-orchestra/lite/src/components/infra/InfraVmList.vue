@@ -36,7 +36,7 @@ const vmOpaqueRefs = computed(() =>
 );
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 .textError {
   padding-left: 3rem;
   font-weight: 700;
