@@ -35,6 +35,7 @@ import UiBadge from "@/components/ui/UiBadge.vue";
 import UiProgressBar from "@/components/ui/UiProgressBar.vue";
 import { computed } from "vue";
 import UiSpinner from "@/components/ui/UiSpinner.vue";
+import NoData from "@/components/NoData.vue";
 
 interface Data {
   id: string;
