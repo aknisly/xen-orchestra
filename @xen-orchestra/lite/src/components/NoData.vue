@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .nodata {
   text-align: center;
 }
