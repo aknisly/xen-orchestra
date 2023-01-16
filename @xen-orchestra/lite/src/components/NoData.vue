@@ -6,7 +6,7 @@
 </template>
 
 <style scoped lang="postcss">
-.nodata {
+.noData {
   text-align: center;
 }
 
