@@ -21,6 +21,7 @@ import {
   createGetObjectsOfType,
   createSelector,
 } from 'selectors'
+import { injectState } from 'reaclette'
 
 import MiniStats from './mini-stats'
 import LicenseWarning from '../host/license-warning'
@@ -38,8 +39,9 @@ import styles from './index.css'
       hostId => obj => obj.$container === hostId
     )
   ),
-  state: createGetHostState((_, props) => props.item),
+  hostState: createGetHostState((_, props) => props.item),
 }))
+@injectState
 export default class HostItem extends Component {
   get _isRunning() {
     const host = this.props.item
@@ -65,10 +67,11 @@ export default class HostItem extends Component {
   _stop = () => stopHost(this.props.item)
   _toggleExpanded = () => this.setState({ expanded: !this.state.expanded })
   _onSelect = () => this.props.onSelect(this.props.item.id)
+  _getLicense = () => this.props.state.xcpngLicenseByBoundObjectId[this.props.item.id]
 
   render() {
-    const { container, expandAll, item: host, nVms, selected, state } = this.props
-
+    const { container, expandAll, item: host, nVms, selected, hostState: state } = this.props
+    const license = this._getLicense()
     return (
       <div className={styles.item}>
         <BlockLink to={`/hosts/${host.id}`}>
@@ -119,6 +122,14 @@ export default class HostItem extends Component {
                 <InconsistentHostTimeWarning host={host} />
                 &nbsp;
                 {hasLicenseRestrictions(host) && <LicenseWarning />}
+                &nbsp;
+                {(license === undefined || license.expires < Date.now()) && (
+                  <Tooltip content={_('hostNoSupport')}>
+                    <a href='https://xcp-ng.com' rel='noreferrer noopener' target='_blank'>
+                      <Icon icon='alarm' className='text-danger' />
+                    </a>
+                  </Tooltip>
+                )}
               </EllipsisContainer>
             </Col>
             <Col mediumSize={3} className='hidden-lg-down'>
