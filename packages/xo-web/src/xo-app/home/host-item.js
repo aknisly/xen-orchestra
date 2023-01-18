@@ -70,7 +70,7 @@ export default class HostItem extends Component {
   _getLicense = () => this.props.state.xcpngLicenseByBoundObjectId[this.props.item.id]
 
   render() {
-    const { container, expandAll, item: host, nVms, selected, hostState: state } = this.props
+    const { container, expandAll, item: host, nVms, selected, hostState } = this.props
     const license = this._getLicense()
     return (
       <div className={styles.item}>
@@ -83,8 +83,8 @@ export default class HostItem extends Component {
                 <Tooltip
                   content={
                     <span>
-                      {_(`powerState${state}`)}
-                      {state === 'Busy' && (
+                      {_(`powerState${hostState}`)}
+                      {hostState === 'Busy' && (
                         <span>
                           {' ('}
                           {map(host.current_operations)[0]}
@@ -94,7 +94,7 @@ export default class HostItem extends Component {
                     </span>
                   }
                 >
-                  <Icon icon={state.toLowerCase()} />
+                  <Icon icon={hostState.toLowerCase()} />
                 </Tooltip>
                 &nbsp;&nbsp;
                 <Ellipsis>
