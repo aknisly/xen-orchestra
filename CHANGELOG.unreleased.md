@@ -8,7 +8,7 @@
 > Users must be able to say: “Nice enhancement, I'm eager to test it”
 
 - [REST API] Expose `residentVms` property on hosts objects
-- [License] Show alert icon on unlicensed host
+- [License] Show alert icon on unlicensed host (PR [#6633](https://github.com/vatesfr/xen-orchestra/pull/6633))
 
 ### Bug fixes
 
