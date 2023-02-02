@@ -67,11 +67,37 @@ export default class HostItem extends Component {
   _stop = () => stopHost(this.props.item)
   _toggleExpanded = () => this.setState({ expanded: !this.state.expanded })
   _onSelect = () => this.props.onSelect(this.props.item.id)
-  _getLicense = () => this.props.state.xcpngLicenseByBoundObjectId[this.props.item.id]
+  _getProSupportIcon = () => {
+    const { state: reacletteState, item: host } = this.props
+    const { supportLevel } = reacletteState.poolLicenseInfoByPoolId[host.$poolId]
+    const license = reacletteState.xcpngLicenseByBoundObjectId[host.id]
+
+    if (supportLevel === 'total') {
+      return (
+        <Tooltip content={_('hostSupportEnabled')}>
+          <Icon icon='menu-support' className='text-success' />
+        </Tooltip>
+      )
+    }
+
+    if (supportLevel === 'partial' && (license === undefined || license.expires < Date.now())) {
+      return (
+        <Tooltip content={_('hostNoLicensePartialProSupport')}>
+          <Icon icon='alarm' className='text-danger' />
+        </Tooltip>
+      )
+    }
+
+    return (
+      <Tooltip content={_('hostNoSupport')}>
+        <Icon icon='menu-support' className='text-warning' />
+      </Tooltip>
+    )
+  }
 
   render() {
     const { container, expandAll, item: host, nVms, selected, hostState } = this.props
-    const license = this._getLicense()
+    const proSupportIcon = this._getProSupportIcon()
     return (
       <div className={styles.item}>
         <BlockLink to={`/hosts/${host.id}`}>
@@ -123,13 +149,7 @@ export default class HostItem extends Component {
                 &nbsp;
                 {hasLicenseRestrictions(host) && <LicenseWarning />}
                 &nbsp;
-                {(license === undefined || license.expires < Date.now()) && (
-                  <Tooltip content={_('hostNoSupport')}>
-                    <a href='https://xcp-ng.com' rel='noreferrer noopener' target='_blank'>
-                      <Icon icon='alarm' className='text-danger' />
-                    </a>
-                  </Tooltip>
-                )}
+                {proSupportIcon}
               </EllipsisContainer>
             </Col>
             <Col mediumSize={3} className='hidden-lg-down'>
