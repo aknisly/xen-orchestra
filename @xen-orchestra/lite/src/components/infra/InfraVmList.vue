@@ -3,7 +3,7 @@
     <template v-if="isLoading">
       <InfraLoadingItem v-for="i in 3" :icon="faDisplay" :key="i" />
     </template>
-    <template v-if="hasError">
+    <template v-else-if="hasError">
       <p class="textError">{{ $t("error-no-data") }}</p>
     </template>
     <template v-else>
