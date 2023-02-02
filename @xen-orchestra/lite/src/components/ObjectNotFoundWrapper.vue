@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-spinner" v-if="!store.isReady">
+  <div class="wrapper-spinner" v-if="store.isLoading">
     <UiSpinner class="spinner" />
   </div>
   <ObjectNotFoundView :id="id" v-else-if="isRecordNotFound" />
@@ -27,7 +27,7 @@ const id = computed(
   () => props.id ?? (currentRoute.value.params.uuid as string)
 );
 const isRecordNotFound = computed(
-  () => store.isReady && !store.hasRecordByUuid(id.value)
+  () => !store.isLoading && !store.hasRecordByUuid(id.value)
 );
 </script>
 

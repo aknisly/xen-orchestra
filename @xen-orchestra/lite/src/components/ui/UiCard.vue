@@ -1,8 +1,19 @@
 <template>
-  <div class="ui-card ui-card-backgroud">
+  <div
+    :class="
+      color === 'error' ? 'ui-card ui-card-backgroud-error' : 'ui-card ui-card-backgroud'
+    "
+  >
     <slot />
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineProps<{
+    color?: "error";
+  }>()
+;
+</script>
 
 <style lang="postcss" scoped>
 .ui-card {

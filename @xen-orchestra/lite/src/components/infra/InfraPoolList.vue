@@ -1,7 +1,7 @@
 <template>
   <ul class="infra-pool-list">
     <InfraLoadingItem
-      v-if="!isReady || pool === undefined"
+      v-if="isLoading || pool === undefined"
       :icon="faBuilding"
     />
     <li v-else class="infra-pool-item">
@@ -30,7 +30,7 @@ import InfraVmList from "@/components/infra/InfraVmList.vue";
 import { usePoolStore } from "@/stores/pool.store";
 
 const poolStore = usePoolStore();
-const { pool, isReady } = storeToRefs(poolStore);
+const { pool, isLoading } = storeToRefs(poolStore);
 </script>
 
 <style lang="postcss" scoped>

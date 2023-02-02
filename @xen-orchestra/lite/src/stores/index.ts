@@ -12,7 +12,7 @@ export function createRecordContext<T extends XenApiRecord>(
   options: Options<T> = {}
 ) {
   let isInitialized = false;
-  const isReady = ref(false);
+  const isLoading = ref(true);
   const hasError = ref(false);
 
   async function init() {
@@ -30,7 +30,7 @@ export function createRecordContext<T extends XenApiRecord>(
       console.error("stores#createRecordContext", error);
     }
 
-    isReady.value = true;
+    isLoading.value = false;
   }
 
   const opaqueRefs = computed<string[]>(() => {
@@ -77,7 +77,7 @@ export function createRecordContext<T extends XenApiRecord>(
     opaqueRefs,
     getRecord,
     getRecordByUuid,
-    isReady,
+    isLoading,
     hasError,
     allRecords,
     hasRecordByUuid,

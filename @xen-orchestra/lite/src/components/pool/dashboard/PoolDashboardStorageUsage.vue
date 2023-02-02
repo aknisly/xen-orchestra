@@ -1,11 +1,11 @@
 <template>
-  <UiCard :class="hasError ? 'ui-card-backgroud-error' : 'ui-card-backgroud'">
+  <UiCard :color="hasError ? 'error' : undefined">
     <UiCardTitle
       :left="$t('storage-usage')"
       :right="$t('top-#', { n: N_ITEMS })"
     />
     <UsageBar
-      :data="srStore.isReady ? data.result : undefined"
+      :data="srStore.isLoading ? undefined : data.result"
       :nItems="N_ITEMS"
     >
       <template #footer>

@@ -1,6 +1,6 @@
 <template>
   <ul class="infra-vm-list">
-    <template v-if="!isReady">
+    <template v-if="isLoading">
       <InfraLoadingItem v-for="i in 3" :icon="faDisplay" :key="i" />
     </template>
     <template v-if="hasError">
@@ -29,7 +29,7 @@ const props = defineProps<{
 }>();
 
 const vmStore = useVmStore();
-const { opaqueRefsByHostRef, isReady, hasError } = storeToRefs(vmStore);
+const { opaqueRefsByHostRef, isLoading, hasError } = storeToRefs(vmStore);
 
 const vmOpaqueRefs = computed(() =>
   opaqueRefsByHostRef.value.get(props.hostOpaqueRef ?? "OpaqueRef:NULL")

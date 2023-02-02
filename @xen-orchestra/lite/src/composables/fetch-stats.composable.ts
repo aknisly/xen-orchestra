@@ -38,7 +38,7 @@ export default function useFetchStats<
   T extends XenApiHost | XenApiVm,
   S extends HostStats | VmStats
 >(type: "host" | "vm", granularity: GRANULARITY) {
-  const stats = ref<Map<string, Stat<S>>>(new Map());
+  const stats = ref<Map<string, Stat<S | null>>>(new Map());
   const timestamp = ref<number[]>([0, 0]);
 
   const register = (object: T) => {

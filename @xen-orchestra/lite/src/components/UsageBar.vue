@@ -1,6 +1,10 @@
 <template>
   <div>
-    <template v-if="data !== undefined">
+    <UiSpinner v-if="data === undefined" class="spinner" />
+    <div v-else-if="data?.length === 0">
+      <NoData />
+    </div>
+    <template v-else>
       <div
         v-for="item in computedData.sortedArray"
         :key="item.id"
@@ -21,12 +25,6 @@
       </div>
       <slot :total-percent="computedData.totalPercentUsage" name="footer" />
     </template>
-    <UiSpinner v-else class="spinner" />
-    <!--
-      <div v-else>
-      <NoData />
-    </div>
-    -->
   </div>
 </template>
 
@@ -34,8 +32,8 @@
 import UiBadge from "@/components/ui/UiBadge.vue";
 import UiProgressBar from "@/components/ui/UiProgressBar.vue";
 import { computed } from "vue";
-import UiSpinner from "@/components/ui/UiSpinner.vue";
 import NoData from "@/components/NoData.vue";
+import UiSpinner from "@/components/ui/UiSpinner.vue";
 
 interface Data {
   id: string;

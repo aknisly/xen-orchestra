@@ -1,6 +1,6 @@
 <template>
   <ul class="infra-host-list">
-    <li v-if="!isReady">{{ $t("loading-hosts") }}</li>
+    <li v-if="isLoading">{{ $t("loading-hosts") }}</li>
     <template v-else>
       <InfraHostItem
         v-for="opaqueRef in opaqueRefs"
@@ -17,5 +17,5 @@ import InfraHostItem from "@/components/infra/InfraHostItem.vue";
 import { useHostStore } from "@/stores/host.store";
 
 const hostStore = useHostStore();
-const { opaqueRefs, isReady } = storeToRefs(hostStore);
+const { opaqueRefs, isLoading } = storeToRefs(hostStore);
 </script>

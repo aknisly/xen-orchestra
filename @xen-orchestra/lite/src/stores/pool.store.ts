@@ -4,18 +4,18 @@ import type { XenApiPool } from "@/libs/xen-api";
 import { createRecordContext } from "@/stores/index";
 
 export const usePoolStore = defineStore("pool", () => {
-  const { init, opaqueRefs, getRecord, isReady } =
+  const { init, opaqueRefs, getRecord, isLoading } =
     createRecordContext<XenApiPool>("pool");
 
   const poolOpaqueRef = computed(() => opaqueRefs.value[0]);
   const pool = computed(() =>
-    isReady.value ? getRecord(poolOpaqueRef.value) : undefined
+    isLoading.value ? undefined : getRecord(poolOpaqueRef.value)
   );
 
   return {
     init,
     pool,
     poolOpaqueRef,
-    isReady,
+    isLoading,
   };
 });

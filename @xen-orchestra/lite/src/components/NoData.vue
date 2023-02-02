@@ -1,6 +1,6 @@
 <template>
   <div class="noData">
-    <img alt="No data" class="img" src="../assets/undraw_bug_fixing.svg" />
+    <img alt="No data" class="img" src="../assets/undraw-bug-fixing.svg" />
     <p class="errorText">{{ $t("error-no-data") }}</p>
   </div>
 </template>
@@ -27,7 +27,6 @@
   font-weight: 500;
   font-size: 1.25em;
   line-height: 150%;
-  text-align: center;
   color: var(--color-red-vates-base);
 }
 </style>

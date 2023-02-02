@@ -38,6 +38,6 @@ import UiTabBar from "@/components/ui/UiTabBar.vue";
 import { usePoolStore } from "@/stores/pool.store";
 
 const poolStore = usePoolStore();
-const { pool, isReady } = storeToRefs(poolStore);
+const { pool } = storeToRefs(poolStore);
 const poolUuid = computed(() => pool.value?.uuid);
 </script>
