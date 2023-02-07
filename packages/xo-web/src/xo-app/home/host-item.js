@@ -149,7 +149,7 @@ export default class HostItem extends Component {
                 &nbsp;
                 {hasLicenseRestrictions(host) && <LicenseWarning />}
                 &nbsp;
-                {proSupportIcon}
+                {host.productBrand === 'XCP-ng' && proSupportIcon}
               </EllipsisContainer>
             </Col>
             <Col mediumSize={3} className='hidden-lg-down'>
