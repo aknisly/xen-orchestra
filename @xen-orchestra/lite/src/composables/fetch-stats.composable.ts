@@ -57,7 +57,7 @@ export default function useFetchStats<
         const objectStore = STORES_BY_OBJECT_TYPE[type]();
 
         if (objectStore.hasError) {
-          stats.value.get(object.uuid)!.stats = null;
+          stats.value.get(mapKey)!.stats = null;
           return;
         }
 
