@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="
-      color === 'error' ? 'ui-card ui-card-backgroud-error' : 'ui-card ui-card-backgroud'
-    "
-  >
+  <div class="ui-card" :class="{ error: color === 'error' }">
     <slot />
   </div>
 </template>
