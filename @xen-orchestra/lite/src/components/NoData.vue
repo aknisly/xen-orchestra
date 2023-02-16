@@ -18,7 +18,7 @@
   width: 17em;
   height: 13em;
 }
-.errorText {
+.error-text {
   margin: auto;
   width: 8em;
   height: 3.75em;
