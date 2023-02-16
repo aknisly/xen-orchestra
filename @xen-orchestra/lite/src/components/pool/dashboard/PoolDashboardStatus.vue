@@ -2,9 +2,7 @@
   <UiCard :color="hasError ? 'error' : undefined">
     <UiCardTitle>{{ $t("status") }}</UiCardTitle>
     <UiSpinner v-if="isLoading" class="spinner" />
-    <template v-else-if="hasError">
-      <NoData />
-    </template>
+    <NoData v-else-if="hasError" />
     <template v-else>
       <PoolDashboardStatusItem
         :active="activeHostsCount"
