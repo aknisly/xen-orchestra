@@ -19,10 +19,7 @@
   box-shadow: var(--shadow-200);
 }
 
-.ui-card-backgroud {
-  background-color: var(--background-color-primary);
-}
-.ui-card-backgroud-error {
+.error {
   background-color: var(--background-color-red-vates);
 }
 </style>
