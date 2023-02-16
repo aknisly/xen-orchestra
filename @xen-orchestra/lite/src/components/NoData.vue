@@ -1,5 +1,5 @@
 <template>
-  <div class="noData">
+  <div class="no-data">
     <img alt="No data" class="img" src="../assets/undraw-bug-fixing.svg" />
     <p class="errorText">{{ $t("error-no-data") }}</p>
   </div>
