@@ -28,9 +28,9 @@ export function createRecordContext<T extends XenApiRecord>(
     } catch (error) {
       hasError.value = true;
       console.error("stores#createRecordContext", error);
+    } finally {
+      isLoading.value = false;
     }
-
-    isLoading.value = false;
   }
 
   const opaqueRefs = computed<string[]>(() => {
