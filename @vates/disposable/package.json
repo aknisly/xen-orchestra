@@ -20,7 +20,7 @@
   },
   "scripts": {
     "postversion": "npm publish --access public",
-    "test": "node--test"
+    "test": "node --test"
   },
   "dependencies": {
     "@vates/multi-key-map": "^0.1.0",

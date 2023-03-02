@@ -41,6 +41,6 @@
     "predev": "yarn run prebuild",
     "prepublishOnly": "yarn run build",
     "postversion": "npm publish",
-    "test": "node--test"
+    "test": "node --test"
   }
 }

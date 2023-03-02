@@ -40,7 +40,7 @@
   },
   "scripts": {
     "postversion": "npm publish",
-    "test": "node--test"
+    "test": "node --test"
   },
   "author": {
     "name": "Vates SAS",
