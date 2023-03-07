@@ -5,7 +5,7 @@
       :right="$t('top-#', { n: N_ITEMS })"
     />
     <UsageBar
-      :data="srStore.isReady ? data.result : undefined"
+      :data="hasError ? null : isReady ? data.result : undefined"
       :nItems="N_ITEMS"
     >
       <template #footer>
@@ -25,6 +25,8 @@ import { useSrStore } from "@/stores/storage.store";
 import { N_ITEMS } from "@/views/pool/PoolDashboardView.vue";
 
 const srStore = useSrStore();
+
+const isReady = computed(() => srStore.isReady);
 
 const hasError = computed(() => srStore.hasError);
 

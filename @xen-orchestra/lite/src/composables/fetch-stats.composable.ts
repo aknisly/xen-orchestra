@@ -19,7 +19,7 @@ const STORES_BY_OBJECT_TYPE = {
 export type Stat<T> = {
   id: string;
   name: string;
-  stats?: T;
+  stats?: T | null;
   pausable: Pausable;
 };
 
@@ -29,7 +29,7 @@ export type FetchedStats<
 > = {
   register: (object: T) => void;
   unregister: (object: T) => void;
-  stats?: ComputedRef<Stat<S>[]>;
+  stats?: ComputedRef<Stat<S>[] | null>;
   timestampStart?: ComputedRef<number>;
   timestampEnd?: ComputedRef<number>;
 };
@@ -38,7 +38,7 @@ export default function useFetchStats<
   T extends XenApiHost | XenApiVm,
   S extends HostStats | VmStats
 >(type: "host" | "vm", granularity: GRANULARITY) {
-  const stats = ref<Map<string, Stat<S | null>>>(new Map());
+  const stats = ref<Map<string, Stat<S>>>(new Map());
   const timestamp = ref<number[]>([0, 0]);
 
   const register = (object: T) => {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <UiSpinner v-if="data === undefined" class="spinner" />
-    <div v-else-if="props.hasError">
+    <div v-else-if="data === null">
       <NoDataError />
     </div>
     <template v-else>
@@ -44,17 +44,14 @@ interface Data {
 }
 
 interface Props {
-  hasError?: boolean;
-  data?: Data[];
+  data?: Data[] | null;
   nItems?: number;
 }
 
 const MIN_WARNING_VALUE = 80;
 const MIN_DANGEROUS_VALUE = 90;
 
-const props = withDefaults(defineProps<Props>(), {
-  hasError: false,
-});
+const props = defineProps<Props>();
 
 const computedData = computed(() => {
   const _data = props.data;

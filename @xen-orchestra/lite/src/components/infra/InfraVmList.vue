@@ -4,7 +4,7 @@
       <InfraLoadingItem v-for="i in 3" :icon="faDisplay" :key="i" />
     </template>
     <template v-else-if="hasError">
-      <p class="textError">{{ $t("error-no-data") }}</p>
+      <p class="text-error">{{ $t("error-no-data") }}</p>
     </template>
     <template v-else>
       <InfraVmItem
@@ -29,7 +29,12 @@ const props = defineProps<{
 }>();
 
 const vmStore = useVmStore();
-const { opaqueRefsByHostRef, isLoading, hasError } = storeToRefs(vmStore);
+
+const isLoading = computed(() => vmStore.isLoading);
+
+const hasError = computed(() => vmStore.hasError);
+
+const { opaqueRefsByHostRef } = storeToRefs(vmStore);
 
 const vmOpaqueRefs = computed(() =>
   opaqueRefsByHostRef.value.get(props.hostOpaqueRef ?? "OpaqueRef:NULL")
@@ -37,7 +42,7 @@ const vmOpaqueRefs = computed(() =>
 </script>
 
 <style scoped lang="postcss">
-.textError {
+.text-error {
   padding-left: 3rem;
   font-weight: 700;
   font-size: 16px;

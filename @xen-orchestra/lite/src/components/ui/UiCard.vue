@@ -1,11 +1,11 @@
 <template>
-  <div class="ui-card" :class="{ error: color === 'error' }">
+  <div class="ui-card" :class="{ error: props.color === 'error' }">
     <slot />
   </div>
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   color?: "error";
 }>();
 </script>

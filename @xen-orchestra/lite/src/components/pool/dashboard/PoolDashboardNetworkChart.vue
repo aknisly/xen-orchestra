@@ -31,7 +31,7 @@ const data = computed<LinearChartData>(() => {
   const stats = hostLastWeekStats?.stats?.value;
   const timestampStart = hostLastWeekStats?.timestampStart?.value;
 
-  if (timestampStart === undefined || stats === undefined) {
+  if (timestampStart === undefined || stats == null) {
     return [];
   }
 

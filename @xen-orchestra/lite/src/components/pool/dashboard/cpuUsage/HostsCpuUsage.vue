@@ -4,7 +4,10 @@
     :left="$t('hosts')"
     :right="$t('top-#', { n: N_ITEMS })"
   />
-  <UsageBar :data="statFetched ? data : undefined" :n-items="N_ITEMS" />
+  <UsageBar
+    :data="statHasError ? null : statFetched ? data : undefined"
+    :n-items="N_ITEMS"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -25,7 +28,7 @@ const data = computed<{ id: string; label: string; value: number }[]>(() => {
   const result: { id: string; label: string; value: number }[] = [];
 
   stats.value.forEach((stat) => {
-    if (stat.stats === undefined) {
+    if (stat.stats == null) {
       return;
     }
 
@@ -49,5 +52,9 @@ const statFetched: ComputedRef<boolean> = computed(() =>
   statFetched.value
     ? true
     : stats.value.length > 0 && stats.value.length === data.value.length
+);
+
+const statHasError: ComputedRef<boolean> = computed(() =>
+  stats.value.every((stat) => stat.stats === null)
 );
 </script>

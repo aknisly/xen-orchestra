@@ -4,7 +4,10 @@
     :left="$t('vms')"
     :right="$t('top-#', { n: N_ITEMS })"
   />
-  <UsageBar :data="statFetched ? data : undefined" :n-items="N_ITEMS" />
+  <UsageBar
+    :data="statHasError ? null : statFetched ? data : undefined"
+    :n-items="N_ITEMS"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -49,5 +52,9 @@ const statFetched: ComputedRef<boolean> = computed(() =>
   statFetched.value
     ? true
     : stats.value.length > 0 && stats.value.length === data.value.length
+);
+
+const statHasError: ComputedRef<boolean> = computed(() =>
+  stats.value.every((stat) => stat.stats === null)
 );
 </script>
