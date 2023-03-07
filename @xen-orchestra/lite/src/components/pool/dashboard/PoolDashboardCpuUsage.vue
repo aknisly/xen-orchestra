@@ -14,6 +14,7 @@ import UiCardTitle from "@/components/ui/UiCardTitle.vue";
 import { useVmStore } from "@/stores/vm.store";
 import { useHostStore } from "@/stores/host.store";
 
-const hasError = computed(() => useVmStore().hasError || useHostStore().hasError);
-
+const hasError = computed(
+  () => useVmStore().hasError || useHostStore().hasError
+);
 </script>

@@ -5,7 +5,7 @@
       :right="$t('top-#', { n: N_ITEMS })"
     />
     <UsageBar
-      :data="srStore.isLoading ? undefined : data.result"
+      :data="srStore.isReady ? data.result : undefined"
       :nItems="N_ITEMS"
     >
       <template #footer>

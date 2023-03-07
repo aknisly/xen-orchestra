@@ -1,6 +1,6 @@
 <template>
   <!-- TODO: add a loader when data is not fully loaded or undefined -->
-  <!-- TODO: display the NoData component in case of a data recovery error -->
+  <!-- TODO: display the NoDataError component in case of a data recovery error -->
   <LinearChart
     :data="data"
     :max-value="customMaxValue"

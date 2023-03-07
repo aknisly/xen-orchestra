@@ -1,8 +1,8 @@
 <template>
   <div>
     <UiSpinner v-if="data === undefined" class="spinner" />
-    <div v-else-if="data?.length === 0">
-      <NoData />
+    <div v-else-if="props.hasError">
+      <NoDataError />
     </div>
     <template v-else>
       <div
@@ -32,7 +32,7 @@
 import UiBadge from "@/components/ui/UiBadge.vue";
 import UiProgressBar from "@/components/ui/UiProgressBar.vue";
 import { computed } from "vue";
-import NoData from "@/components/NoData.vue";
+import NoDataError from "@/components/NoDataError.vue";
 import UiSpinner from "@/components/ui/UiSpinner.vue";
 
 interface Data {
@@ -44,6 +44,7 @@ interface Data {
 }
 
 interface Props {
+  hasError?: boolean;
   data?: Data[];
   nItems?: number;
 }
@@ -51,7 +52,9 @@ interface Props {
 const MIN_WARNING_VALUE = 80;
 const MIN_DANGEROUS_VALUE = 90;
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  hasError: false,
+});
 
 const computedData = computed(() => {
   const _data = props.data;

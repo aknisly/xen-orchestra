@@ -78,6 +78,7 @@ export function createRecordContext<T extends XenApiRecord>(
     getRecord,
     getRecordByUuid,
     isLoading,
+    isReady: computed(() => !isLoading.value && !hasError.value),
     hasError,
     allRecords,
     hasRecordByUuid,

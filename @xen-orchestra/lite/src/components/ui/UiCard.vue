@@ -5,10 +5,9 @@
 </template>
 
 <script lang="ts" setup>
-  defineProps<{
-    color?: "error";
-  }>()
-;
+defineProps<{
+  color?: "error";
+}>();
 </script>
 
 <style lang="postcss" scoped>

@@ -27,7 +27,7 @@ const id = computed(
   () => props.id ?? (currentRoute.value.params.uuid as string)
 );
 const isRecordNotFound = computed(
-  () => !store.isLoading && !store.hasRecordByUuid(id.value)
+  () => store.isReady && !store.hasRecordByUuid(id.value)
 );
 </script>
 
