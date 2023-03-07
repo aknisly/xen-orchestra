@@ -27,4 +27,6 @@
 
 <!--packages-start-->
 
+@xen-orchestra/backups: minor
+
 <!--packages-end-->
