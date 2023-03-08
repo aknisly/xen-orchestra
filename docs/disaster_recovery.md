@@ -4,6 +4,10 @@ Disaster Recovery (DR) encompasses all the ways to recover after losing hosts or
 
 In this guide we'll only see the technical aspect of DR, which is a small part of this vast topic.
 
+:::tip
+If you are configuring a backup job, you'll see two mutually exclusive options: 'Disaster Recovery' and 'Continuous Replication.' Both back up to another XCP-ng storage repository, but the Disaster Recovery does full backups, while the Continuous Replication does delta backups.
+:::
+ 
 ## Best practices
 
 We strongly encourage you to read some literature on this topic. Basically, you should be able to recover from a major disaster within an appropriate amount of time and minimal acceptable data loss.
